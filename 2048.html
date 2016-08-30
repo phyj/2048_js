@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>2048</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+		var pic = new Array();
+		var ps = new Array();
+		var ro = new Array();
+		var pro ;
+		function random(len)
+		{
+			return Math.floor(Math.random()*len);
+		}
+		function check()
+		{
+			for(var i=0;i<4;i++)
+			{
+				for(var j=0;j<4;j++)
+				{
+					if(i<3&&ps[i*4+j]==ps[(i+1)*4+j])
+						return false;
+					if(j<3&&ps[i*4+j]==ps[i*4+j+1])
+						return false;
+				}
+			}
+			return true;
+		}
+		function display()
+		{
+			var zero = new Array();
+			for(var i=0;i<16;i++)
+			{
+				if(ps[i]==0)
+				{
+					zero[zero.length] = i;
+				}
+			}
+			var ch;
+			if(Math.random()<pro)
+			{
+				ch = 1;
+			}
+			else
+			{
+				ch = 2;
+			}
+			ps[zero[random(zero.length)]] = ch;
+			for(var i=0;i<16;i++)
+			{
+				$("#p"+i).attr("src",pic[ps[i]]);
+			}
+			if(zero.length<=1&&check()==true)
+			{
+				alert("QAQ");
+			}
+		}
+		function init()
+		{
+			pro = 0.5;
+			for(var i=0;i<14;i++)
+			{
+				pic[i] = i+".jpg"
+			}
+			for(var i=0;i<16;i++)
+				ps[i] = 0;
+			ro[0] = 3;
+			ro[1] = 7;
+			ro[2] = 11;
+			ro[3] = 15;
+			ro[4] = 2;
+			ro[5] = 6;
+			ro[6] = 10;
+			ro[7] = 14;
+			ro[8] = 1;
+			ro[9] = 5;
+			ro[10] = 9;
+			ro[11] = 13;
+			ro[12] = 0;
+			ro[13] = 4;
+			ro[14] = 8;
+			ro[15] = 12;
+			display();
+		}
+		function rotate()
+		{
+			var tp = new Array();
+			for(var i=0;i<16;i++)
+				tp[i] = ps[i];
+			for(var i=0;i<16;i++)
+				ps[i] = tp[ro[i]];
+		}
+		function move_left()
+		{
+			for(var i=0;i<4;i++)
+			{
+				var t = new Array();
+				for(var j=0;j<4;j++)
+				{
+					var p = i*4+j;
+					if(ps[p]!=0)
+					{
+						t[t.length] = ps[p];
+					}
+				}
+				var tp = new Array();
+				var union = false;
+				for(var j=0;j<t.length;j++)
+				{
+					if(tp.length==0)
+					{
+						tp[0] = t[j];
+					}
+					else if(union==false&&tp[tp.length-1]==t[j])
+					{
+						union = true;
+						tp[tp.length-1]++;
+					}
+					else 
+					{
+						union = false;
+						tp[tp.length] = t[j];
+					}
+				}
+				for(var j=0;j<4;j++)
+				{
+					var p = i*4 + j;
+					if(j<tp.length)
+					{
+						ps[p] = tp[j];
+					}
+					else
+					{
+						ps[p] = 0;
+					}
+				}
+			}
+		}
+		function move_up()
+		{
+			rotate();
+			move_left();
+			rotate();
+			rotate();
+			rotate();
+		}
+		function move_right()
+		{
+			rotate();
+			rotate();
+			move_left();
+			rotate();
+			rotate();
+		}
+		function move_down()
+		{
+			rotate();
+			rotate();
+			rotate();
+			move_left();
+			rotate();
+		}
+		$(document).ready(init);
+		document.onkeydown=function(event){ 
+			var e = event || window.event || arguments.callee.caller.arguments[0];            
+			if(e&&e.keyCode==37)// left
+			{
+				move_left();
+			}
+			if(e&&e.keyCode==38)//up
+			{
+				move_up();
+			}
+			if(e&&e.keyCode==39)//right
+			{
+				move_right();
+			}
+			if(e&&e.keyCode==40)//down
+			{
+				move_down();
+			}
+			display();
+         };  
+    </script>
+</head>
+<body>
+<p>
+<img id="p0" />
+<img id="p1" />
+<img id="p2" />
+<img id="p3" />
+</p>
+<p>
+<img id="p4" />
+<img id="p5" />
+<img id="p6" />
+<img id="p7" />
+</p>
+<p>
+<img id="p8" />
+<img id="p9" />
+<img id="p10" />
+<img id="p11" />
+</p>
+<p>
+<img id="p12" />
+<img id="p13" />
+<img id="p14" />
+<img id="p15" />
+</p>
+</body>
+</html>
